@@ -14,6 +14,7 @@ router
     authController.allowedTo("Admin"),
     imageController.uploadProductImage,
     imageController.resizeImage,
+    parseBody,
     controller.createUser
   )
   .get(controller.getAllUsers);

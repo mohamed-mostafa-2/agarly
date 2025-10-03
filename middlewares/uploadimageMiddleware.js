@@ -26,7 +26,11 @@ const multerOptions = () => {
     }
   };
 
-  const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+  const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter,
+    limits: { fieldSize: 5 * 1024 * 1024 },
+  }); // 5mb
   return upload;
 };
 

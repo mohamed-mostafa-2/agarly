@@ -10,15 +10,21 @@ const asyncHandler = require("express-async-handler");
 exports.uploadProductImage = uploadMixOfImages([
   { name: "images", maxCount: 5 },
   { name: "imageCover", maxCount: 1 },
-  { name: "imageProfile", maxCount: 1 },
+  { name: "profileImage", maxCount: 1 },
 ]);
 
-exports.resizeImage = asyncHandler(async (req, res, next) => {
-  if (!req.files || !req.files.images || !req.files.imageCover) return next();
 
-  if (req.files.imageProfile) {
+
+exports.resizeImage = asyncHandler(async (req, res, next) => {
+  if (
+    !req.files || (Object.keys(req.files).length === 0 && req.files.constructor === Object)
+  ) {
+    return next();
+  }
+
+  if (req.files.profileImage) {
     const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;
-    const buffer = await sharp(req.files.imageProfile[0].buffer)
+    const buffer = await sharp(req.files.profileImage[0].buffer)
       .resize(600, 600)
       .toFormat("jpeg")
       .jpeg({ quality: 90 })
@@ -27,12 +33,13 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
     const result = await cloudinary.uploader.upload(
       `data:image/jpeg;base64,${buffer.toString("base64")}`,
       {
-        folder: "users/profiles",
+        folder: "users/profileImage",
         public_id: filename.replace(".jpeg", ""),
         format: "jpeg",
       }
     );
-    req.body.imageProfile = result.secure_url;
+    req.body.profileImage = result.secure_url;
+    return next();
   }
 
   if (req.files.imageCover) {

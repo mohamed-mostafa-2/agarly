@@ -23,7 +23,10 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     gender: { type: String, enum: ["male", "female"], default: "male" },
-    profileImage: String,
+    profileImage: {
+      type: String,
+      required: [true, "profile image is required"],
+    },
     address: addressSchema,
     birthday: Date,
     phone: String,
