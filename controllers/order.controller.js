@@ -2,12 +2,13 @@ const asyncHandler = require("express-async-handler");
 const Order = require('../models/order.model');
 const ProductModel = require('../models/product.model')
 const factory = require('./handlerFactory')
+const moment = require('moment')
 
 
 exports.checkoutOrder = asyncHandler(async (req, res, next) => {
-    const { Customer, Product, orderDate, returnDate } = req.body;
+    const { Customer, Product, orderDate, numOfDays } = req.body;
 
-    if (!Customer || !Product || !returnDate) {
+    if (!Customer || !Product || !numOfDays) {
         return res.status(400).json({ status: "fail", message: 'Please provide all required fields' });
     }
 
@@ -17,7 +18,11 @@ exports.checkoutOrder = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ status: "fail", message: 'Product not found' });
     }
 
-    const totalAmount = Product1.rentalFee;
+    const totalAmount = Product1.rentalFee * numOfDays;
+    const formattedOrderDate =  orderDate ? moment(orderDate, 'YYYY-MM-DD') : moment()
+    const returnDate = new Date(formattedOrderDate);
+    returnDate.setDate(returnDate.getDate() + numOfDays);
+
     const order = await Order.create({
         Customer,
         Product,

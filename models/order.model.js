@@ -27,7 +27,9 @@ const orderSchema = new mongoose.Schema(
       enum: ["Pending", "Confirmed", "Cancelled", "Completed"],
       default: "Pending",
     },
-
+    numOfDays: {
+      type: Number,
+    },
     totalAmount: {
       type: Number,
     },
