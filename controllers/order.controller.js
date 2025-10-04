@@ -8,7 +8,7 @@ const moment = require('moment')
 exports.checkoutOrder = asyncHandler(async (req, res, next) => {
     const { Customer, Product, orderDate, numOfDays } = req.body;
 
-    if (!Customer || !Product || !numOfDays) {
+    if (!Customer || !Product) {
         return res.status(400).json({ status: "fail", message: 'Please provide all required fields' });
     }
 

@@ -29,6 +29,7 @@ const orderSchema = new mongoose.Schema(
     },
     numOfDays: {
       type: Number,
+      default: 1,
     },
     totalAmount: {
       type: Number,
