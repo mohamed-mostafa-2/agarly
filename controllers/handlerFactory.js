@@ -34,13 +34,13 @@ exports.updateOne = (model) =>
     // trigger "save" event when update review
     document.save();
 
-    res.status(200).json({ data: document });
+    res.status(200).json({ status: 'success', message: `${model} updated successfully`, data: document });
   });
 
 exports.createOne = (model) =>
   asyncHandler(async (req, res) => {
     const newDoc = await model.create(req.body);
-    res.status(201).json({ data: newDoc });
+    res.status(201).json({status: 'success', message: `${model} created successfully`, data: newDoc });
   });
 
 exports.getOne = (model, populateOptions) =>
@@ -58,7 +58,7 @@ exports.getOne = (model, populateOptions) =>
       // res.status(404).json({ msg: `No category for this id ${id}` });
       return next(new ApiError(`No document for this id ${id}`, 404));
     }
-    res.status(200).json({ data: document });
+    res.status(200).json({status: 'success', message: `${model} reterived successfully`, data: document });
   });
 
 exports.getAll = (model) =>
@@ -80,5 +80,5 @@ exports.getAll = (model) =>
     const documents = await mongooseQuery;
     res
       .status(200)
-      .json({ paginationResult, results: documents.length, data: documents });
+      .json({ status: 'success', paginationResult, results: documents.length, data: documents });
   });

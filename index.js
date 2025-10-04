@@ -15,6 +15,7 @@ const clothesRoute = require("./routes/clothes.routes");
 const realStateRoute = require("./routes/realstate.routes");
 const wishlistRoute = require("./routes/wishlist.routes");
 const userRoute = require("./routes/user.routes");
+const orderRoute = require("./routes/order.routes");
 const compression = require("compression");
 const hpp = require("hpp"); // Middleware to protect against HTTP Parameter Pollution attacks
 const mongoSanitize = require("express-mongo-sanitize"); // Middleware to sanitize data from query injection
@@ -47,6 +48,7 @@ app.use("/api/v1/wedding", weddingRoute);
 app.use("/api/v1/realstate", realStateRoute);
 app.use("/api/v1/wishlist", wishlistRoute);
 app.use("/api/v1/users", userRoute);
+app.use("/api/v1/orders", orderRoute);
 
 app.use(globalError);
 
