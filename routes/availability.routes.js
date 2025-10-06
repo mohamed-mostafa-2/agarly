@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { checkAvailability, addUnavailableDates } = require('../controllers/availability.controller');
+const { checkAvailability, addUnavailableDates, removeUnavailableDate } = require('../controllers/availability.controller');
 const { protect, allowedTo } = require('../controllers/auth.controller');
 
 // Protect all routes after this middleware
@@ -15,6 +15,11 @@ router.post(
     '/addUnavailableDates',
     allowedTo('Agent', 'Admin'),
     addUnavailableDates
+);
+router.post(
+    '/removeUnavailableDate',
+    allowedTo('Agent', 'Admin'),
+    removeUnavailableDate
 );
 
 module.exports = router;

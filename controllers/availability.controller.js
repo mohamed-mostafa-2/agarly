@@ -66,7 +66,7 @@ exports.addUnavailableDates = asyncHandler(async (req, res, next) => {
     if (!product) {
         return next(new ApiError("Product not found", 404));
     }
-    
+
     let availability = await Availability.findOne({ Product: productId });
     if (!availability) {
         availability = new Availability({ Product: productId });
@@ -96,3 +96,38 @@ exports.addUnavailableDates = asyncHandler(async (req, res, next) => {
         unavailableDates: availability.unavailableDates,
     });
 })
+
+
+exports.removeUnavailableDate = asyncHandler(async (req, res, next) => {
+    const { productId, date } = req.body;
+
+    // Validate input
+    if (!productId || !date) {
+        return next(new ApiError("Product ID and date are required", 400));
+    }
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+        return next(new ApiError("Product not found", 404));
+    }
+
+    const availability = await Availability.findOne({ Product: productId });
+    if (!availability) {
+        availability = new Availability({ Product: productId });
+    }
+    const targetDate = new Date(date).toISOString().split('T')[0];
+
+// Remove the date from unavailableDates
+    await Availability.findOneAndUpdate(
+        { product: productId },
+        { $pull: { unavailableDates: { $eq: new Date(targetDate) } } },
+        { new: true }
+    );
+    
+    res.status(200).json({
+        status: "success",
+        message: "Unavailable date removed successfully",
+        unavailableDates: availability.unavailableDates,
+    });
+});
